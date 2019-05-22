@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { interval, Observable, Observer } from 'rxjs';
+import { interval, Observable, Observer, Subject } from 'rxjs';
+import { buffer, debounceTime, filter, map, throttle, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -7,14 +8,17 @@ import { interval, Observable, Observer } from 'rxjs';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  clickStream = new Subject<void>();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
+    this.initDoubleClick();
+
     // const myObservable = interval(1000);
 
     // myObservable.subscribe((num: number) => console.log(num));
-
 
 
     // const customObs = Observable.create((observer: Observer<string>) => {
@@ -45,4 +49,21 @@ export class HomeComponent implements OnInit {
     // );
   }
 
+  private initDoubleClick() {
+    const stream = this.clickStream.pipe(
+      debounceTime(250),
+    );
+
+    this.clickStream.pipe(
+      buffer(stream),
+      map(list => list.length),
+      filter(x => x === 2),
+    ).subscribe(() => {
+      console.log('double!');
+    });
+  }
+
+  handleClick() {
+    this.clickStream.next();
+  }
 }

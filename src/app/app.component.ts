@@ -11,17 +11,17 @@ export class AppComponent implements OnInit {
     title = 'app';
 
     ngOnInit() {
-        const obs = Observable.create(observer => {
-            setInterval(() => observer.next(Date.now()), 1000);
-        })
-            .pipe(
-                share()
-            );
-
-        obs.subscribe(v => console.log('1st subscriber: ' + v));
-
-        setTimeout(() => {
-            obs.subscribe(v => console.log('2nd subscriber: ' + v));
-        }, 1000);
+        // const obs = Observable.create(observer => {
+        //     setInterval(() => observer.next(Date.now()), 1000);
+        // })
+        //     .pipe(
+        //         share()
+        //     );
+        //
+        // obs.subscribe(v => console.log('1st subscriber: ' + v));
+        //
+        // setTimeout(() => {
+        //     obs.subscribe(v => console.log('2nd subscriber: ' + v));
+        // }, 1000);
     }
 }
