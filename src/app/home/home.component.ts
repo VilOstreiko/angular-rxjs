@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { interval, Observable, Observer, Subject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { interval, Observable, Observer, Subject, Subscription } from 'rxjs';
 import { buffer, debounceTime, filter, map, throttle, throttleTime } from 'rxjs/operators';
 
 @Component({
@@ -7,8 +7,9 @@ import { buffer, debounceTime, filter, map, throttle, throttleTime } from 'rxjs/
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   clickStream = new Subject<void>();
+  subscription: Subscription;
 
   constructor() {
   }
@@ -16,10 +17,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.initDoubleClick();
 
-    // const myObservable = interval(1000);
+    const myObservable = interval(1000);
 
-    // myObservable.subscribe((num: number) => console.log(num));
-
+    this.subscription = myObservable.subscribe((num: number) => console.log(num));
 
     // const customObs = Observable.create((observer: Observer<string>) => {
     //   setTimeout(() => {
@@ -47,6 +47,10 @@ export class HomeComponent implements OnInit {
     //     console.log('COMPLETED');
     //   }
     // );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private initDoubleClick() {
